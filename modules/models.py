@@ -172,6 +172,8 @@ def huggingface_loader(model_name):
                 device = torch.device("xpu")
                 model = model.to(device)
             elif is_npu_available():
+                torch.npu.set_device(0)
+                device = torch.device("npu")
                 device = torch.device("npu")
                 model = model.to(device)
             else:
