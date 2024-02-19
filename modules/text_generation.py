@@ -10,6 +10,7 @@ import traceback
 import numpy as np
 import torch
 import transformers
+
 from transformers import (
     LogitsProcessorList,
     is_torch_npu_available,
@@ -379,6 +380,9 @@ def generate_reply_HF(question, original_question, seed, state, stopping_strings
                 kwargs['stopping_criteria'].append(Stream(callback_func=callback))
                 clear_torch_cache()
                 with torch.no_grad():
+                    # workaround, please remove me after fixed it.
+                    if is_torch_npu_available():
+                        torch.npu.set_device(0)
                     shared.model.generate(**kwargs)
 
             def generate_with_streaming(**kwargs):
